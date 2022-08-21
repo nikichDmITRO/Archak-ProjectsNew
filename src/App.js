@@ -1,58 +1,97 @@
-import './index.scss';
+import { useState } from "react";
+import "./index.scss";
 
 const questions = [
   {
-    title: 'React - это ... ?',
-    variants: ['библиотека', 'фреймворк', 'приложение'],
-    correct: 0,
-  },
-  {
-    title: 'Компонент - это ... ',
-    variants: ['приложение', 'часть приложения или страницы', 'то, что я не знаю что такое'],
+    title: "Как зовут твоего парня?",
+    variants: ["Вадим", "Никита", "Толик", "Василий"],
     correct: 1,
   },
   {
-    title: 'Что такое JSX?',
-    variants: [
-      'Это простой HTML',
-      'Это функция',
-      'Это тот же HTML, но с возможностью выполнять JS-код',
-    ],
+    title: "Сколько ему лет?",
+    variants: ["21", "76", "24", "22"],
     correct: 2,
+  },
+  {
+    title: "Откуда он родом?",
+    variants: ["Варкута", "Брест", "Рогинь", "Зябровка"],
+    correct: 2,
+  },
+  {
+    title: "Какой у него рост?",
+    variants: ["168см", "171см", "179см", "175см"],
+    correct: 3,
+  },
+  {
+    title: "Когда День Рождения?",
+    variants: ["23 июня", "10 января", "3 марта", "25 июля"],
+    correct: 3,
   },
 ];
 
-function Result() {
+function Result({ corect, setStep, setCorect }) {
   return (
     <div className="result">
+      <h1>Я люблю тебя , Пипочка</h1>
       <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" />
-      <h2>Вы отгадали 3 ответа из 10</h2>
-      <button>Попробовать снова</button>
+      <h2>
+        Анастасия отгадала {corect} ответа из {questions.length}
+      </h2>
+
+      <button
+        onClick={() => {
+          setStep(0);
+          setCorect(0);
+        }}
+      >
+        Попробовать снова
+      </button>
     </div>
   );
 }
 
-function Game() {
+function Game({ step, question, clickVariant }) {
+  const percentag = Math.round((step / questions.length) * 100);
   return (
     <>
       <div className="progress">
-        <div style={{ width: '50%' }} className="progress__inner"></div>
+        <div
+          style={{ width: `${percentag}%` }}
+          className="progress__inner"
+        ></div>
       </div>
-      <h1>Что такое useState?</h1>
+      <h1>{question.title}</h1>
       <ul>
-        <li>Это функция для хранения данных компонента</li>
-        <li>Это глобальный стейт</li>
-        <li>Это когда на ты никому не нужен</li>
+        {question.variants.map((text, index) => (
+          <li onClick={() => clickVariant(index)} key={text}>
+            {text}
+          </li>
+        ))}
       </ul>
     </>
   );
 }
 
 function App() {
+  const [step, setStep] = useState(0);
+  const [corect, setCorect] = useState(0);
+  const question = questions[step];
+
+  const clickVariant = (index) => {
+    console.log(step, index);
+    setStep(step + 1);
+    if (index == question.correct) {
+      setCorect(corect + 1);
+    }
+  };
+
   return (
     <div className="App">
-      <Game />
-      {/* <Result /> */}
+      {step != questions.length ? (
+        <Game step={step} question={question} clickVariant={clickVariant} />
+      ) : (
+        <Result corect={corect} setStep={setStep} setCorect={setCorect} />
+      )}
     </div>
   );
 }
