@@ -5,7 +5,7 @@ const Modal = ({open, setOpen}) => {
 
   console.log(open)
   return (
-    <div className={`overlay animated ${open ? "show" : " "}`}>
+    <div className="overlay">
       <div className="modal">
         <svg
           onClick={() => setOpen(false)}
